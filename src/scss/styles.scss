@@ -1,0 +1,303 @@
+@import '../assets/fonts/fonts.css';
+@import '_mixins';
+
+* {
+  box-sizing: border-box;
+}
+
+body{
+  font-size: 16px;
+  font-family: 'Gilroy', 'Open Sans', sans-serif;
+  color: #333;
+  padding: 30px 20px;
+  margin: 0;
+  min-height: 100vh;
+  background: $salt-blue url(../assets/bk-pattern.svg) repeat;
+}
+
+.app-title {
+  color: #fff;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.todo{
+  @include relative;
+  width: 100%;
+  max-width: 400px;
+  min-height: 500px;
+  margin: 20px auto 50px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  padding: 20px 20px;
+  -webkit-box-shadow: 0 0 15px 0 rgba(0,0,0,0.05);
+  box-shadow: 0 0 15px 0 rgba(0,0,0,0.05);
+  background-color: #f4f7fc;
+  overflow: hidden;
+
+  &__title{
+    margin: 0;
+    font-size: 1.2em;
+    color: $secondary-accent;
+    font-weight: normal;
+  }
+
+  &__form {
+    @include flex(start, stretch, nowrap);
+    overflow: overlay;
+  
+    label {
+      display: block;
+      text-align: center;
+      font-size: 1.2em;
+    }
+  }
+
+  &__status {
+    &.--free{
+      font-weight: bold;
+      text-align: center;
+      margin: 40px 0;
+  
+      img{
+        display: block;
+        width: 80px;
+        margin: 10px auto;
+        vertical-align: middle;
+      }
+    }
+  }
+
+  &__list{
+    padding: 0;
+    margin-bottom: 30px;
+
+    &.--archived li{
+      background: #fff;
+    }
+
+    > li{
+      @include relative();
+      list-style-type: none;
+      display: block;
+      margin: 8px 0;
+      background: #e0e8f4;
+      border-radius: 3px;
+      padding: 12px 50px 12px 36px;
+      overflow: hidden;
+
+      &:hover .delete{
+        width: 44px;
+        opacity: 1;
+
+        &::after{
+          transform: translate(-50%, -50%) scale(1);
+        }
+      }
+
+      .delete{
+        @include absolute(top 50% right 0);
+        height: 100%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        opacity: 0;
+        width: 0;
+        background-color: #f56468;
+        color: #fff;
+        transition: all ease-in 0.25s;
+
+        &::after{
+          @include absolute(top 50% left 50%);
+          content: '';
+          width: 16px;
+          height: 16px;
+          background: url(../assets/trash.svg) no-repeat center/contain;
+          transform: translate(-50%, -50%) scale(0.5);
+          transition: all ease-in 0.25s;
+        }
+      }
+    }
+
+    &-text{
+      position: relative;
+      display: inline-block;
+      font-weight: 500;
+      padding: 0 0.5em;
+    }
+
+    &-checkbox {
+      @include absolute; 
+      opacity: 0;
+      display: none;
+
+      &  + label {
+        @include absolute(top 50% left 10px);
+        cursor: pointer;
+        transform: translateY(-50%);
+        width: 22px;
+        height: 22px;
+        border-radius: 2px;
+        border: 1px solid #cfdcec;
+        background: #fff;
+      }
+
+      &:checked{
+        & + label::after{
+          @include absolute(top 20% left 50%);
+          display: block;
+          content: '';
+          height: 4px;
+          width: 8px;
+          border: solid $secondary-accent;
+          border-width: 0 0 2px 2px;
+          transform-origin: center center;
+          transform: rotate(-45deg) translate(-50%, -50%);
+        }
+
+        & ~ .todo-text{
+          color: #888;
+          text-decoration: line-through
+        }
+      }
+    }
+  }
+
+  &__actions{
+    @include absolute(left 50% bottom 16px);
+    width: 100%;
+    transform: translateX(-50%);
+    text-align: center;
+  }
+
+  .btn, input {
+    line-height: 2em;
+    border-radius: 3px;
+    border: 0;
+    display: inline-block;
+    margin: 15px 0;
+    padding: 0.2em 1em;
+    font-size: 1em;
+    font-family: 'Gilroy', 'Open Sans', sans-serif;
+  }
+  
+  input{
+    &[type='text'] {
+      flex: 1;
+      width: calc(100% - 50px);
+      border: 1px solid #ddd;
+      border-right: none;
+      transition: all ease-in 0.25s;
+      border-radius: 3px 0 0 3px;
+    }
+  
+    &:focus{
+      outline: none;
+      border: 1px solid $primary-accent;;
+    }
+  
+    &::placeholder{
+      color: rgba(0,0,0,0.3);
+      font-style: italic;
+    }
+  }
+  
+  .btn {
+    text-align: center;
+    border-width: 1px;
+    border-style: solid;
+  
+    &:hover {
+      cursor: pointer;
+    }
+  
+    &-add {
+      @include flex(center, center);
+      background: #ddd;
+      color: #fefefe;
+      border-color: #ddd;
+      min-width: 50px;
+      pointer-events: none;
+      transition: all ease-in 0.25s;
+      font-size: 2.1em;
+      line-height: 0.5em;
+      padding: 14px 12px 8px;
+      border-radius: 0 3px 3px 0;
+  
+      &.active{
+        background: $primary-accent;
+        border-color: $primary-accent;
+        pointer-events: visible;
+  
+        &:hover{
+          background: $medium-blue;
+          border-color: $medium-blue;
+        }
+      }
+  
+      &:active{
+        transform: scale(0.95);
+      }
+    }
+  
+    &-secondary{
+      @include relative;
+      display: inline-block;
+      color: $primary-accent;
+      border: 0;
+      padding: 0;
+      margin: 0 10px;
+    
+      &::after{
+        @include absolute(left 0 bottom 0);
+        content: '';
+        width: 0;
+        height: 2px;
+        background-color: $secondary-accent;
+        transition: all ease-in 0.25s;
+      }
+    
+      &:hover::after{
+        width: 100%;
+      }
+    }
+  }
+}
+
+/* disable ios zoom on focus */
+@media screen and (-webkit-min-device-pixel-ratio:0) { 
+  select,
+  textarea,
+  input {
+    font-size: 16px;
+  }
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) { 
+  select:focus,
+  textarea:focus,
+  input:focus {
+    font-size: 16px;
+  }
+}
+
+/*** ANIMATIONS ***/
+.todo-item-enter-active, .todo-item-leave-active {
+  transition: opacity ease 0.25s, transform ease-in-out 0.3s;
+  transform-origin: left center;
+}
+
+/* .todo-item-leave-active below version 2.1.8 */
+.todo-item-enter, .todo-item-leave-to {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.slide-fade-enter-active, .slide-fade-leave-active {
+  transition: all 0.3s ease;
+}
+
+/* .slide-fade-leave-active below version 2.1.8 */
+.slide-fade-enter, .slide-fade-leave-to {  
+  transform: scale(1.1);
+  opacity: 0;
+}

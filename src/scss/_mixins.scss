@@ -1,0 +1,96 @@
+@import '_variables';
+
+%flex {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+%flex-column {
+    display: flex;
+    flex-flow: column wrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+@mixin flex($j: center, $a: center, $fw: wrap, $fd: row, $d: flex) {
+    @extend %flex;
+
+    @if ($d != "flex") {
+        display: $d;
+    }
+
+    @if ($fd != "row" or $fw != "wrap") {
+        flex-flow: $fd $fw;
+    }
+
+    @if ($j != "center") {
+        justify-content: $j;
+    }
+
+    @if ($a != "center") {
+        align-items: $a;
+    }
+}
+
+@mixin flex-column($j: flex-start, $a: flex-start, $fw: wrap, $fd: column, $d: flex) {
+    @extend %flex-column;
+
+    @if ($d != "flex") {
+        display: $d;
+    }
+
+    @if ($fd != "column" or $fw != "wrap") {
+        flex-flow: $fd $fw;
+    }
+
+    @if ($j != "flex-start") {
+        justify-content: $j;
+    }
+
+    @if ($a != "flex-start") {
+        align-items: $a;
+    }
+}
+
+
+@mixin position($position, $args: ()) {
+    $offsets: top right bottom left;
+    position: $position;
+
+    @each $offset in $offsets {
+        $index: index($args, $offset);
+
+        @if $index {
+            @if $index == length($args) {
+                #{$offset}: 0;
+            }
+            @else {
+                $next: nth($args, $index + 1);
+
+                @if is-valid-length($next) {
+                    #{$offset}: $next;
+                }
+                @else if index($offsets, $next) {
+                    #{$offset}: 0;
+                }
+                @else {
+                    @warn "Invalid value `#{$next}` for offset `#{$offset}`.";
+                }
+            }
+        }
+    }
+}
+
+@mixin absolute($args: ()) {
+    @include position(absolute, $args);
+}
+
+@mixin fixed($args: ()) {
+    @include position(fixed, $args);
+}
+
+@mixin relative($args: ()) {
+    @include position(relative, $args);
+}
